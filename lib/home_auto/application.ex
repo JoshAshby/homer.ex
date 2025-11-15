@@ -16,6 +16,9 @@ defmodule HomeAuto.Application do
       # {HomeAuto.Worker, arg},
       # Start to serve requests, typically the last entry
       HomeAutoWeb.Endpoint,
+      # Listeners,
+      HomeAuto.MQTT,
+
       HomeAuto.Scheduler,
     ]
 
