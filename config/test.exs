@@ -6,12 +6,9 @@ import Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :home_auto, HomeAuto.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "home_auto_test#{System.get_env("MIX_TEST_PARTITION")}",
-  pool: Ecto.Adapters.SQL.Sandbox,
-  pool_size: System.schedulers_online() * 2
+  database: Path.expand("../home_auto_test.db", __DIR__),
+  pool_size: 5,
+  pool: Ecto.Adapters.SQL.Sandbox
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
