@@ -15,7 +15,8 @@ defmodule HomeAuto.Application do
       # Start a worker by calling: HomeAuto.Worker.start_link(arg)
       # {HomeAuto.Worker, arg},
       # Start to serve requests, typically the last entry
-      HomeAutoWeb.Endpoint
+      HomeAutoWeb.Endpoint,
+      HomeAuto.Scheduler,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

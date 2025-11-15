@@ -66,7 +66,20 @@ defmodule HomeAuto.MixProject do
       {:gettext, "~> 0.26"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.2.0"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+      # Adds UUIDv7 support (used with the object id setup)
+      {:uniq, "~> 0.6.1"},
+      # Style linting
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      # {:styler, "~> 1.4", only: [:dev, :test], runtime: false},
+      # automatic test re-running with mix test.watch
+      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
+      # tailwind components
+      {:mishka_chelekom, "~> 0.0.8", only: :dev},
+      # MQTT client
+      {:emqtt, github: "emqx/emqtt", tag: "1.13.8", system_env: [{"BUILD_WITHOUT_QUIC", "1"}]},
+      # Scheduling via cron
+      {:quantum, "~> 3.0"},
     ]
   end
 
