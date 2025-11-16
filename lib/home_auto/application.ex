@@ -25,6 +25,30 @@ defmodule HomeAuto.Application do
       HomeAuto.Schedules.Evening,
       HomeAuto.Schedules.Nightowl,
 
+      # Automations
+      {HomeAuto.Automations.Motion, zone: :basement,
+        topic?: &(HomeAuto.Zones.Basement.topic?(:motion, &1)),
+        publish_to: "homekit/house/zones/basement/motion"},
+      {HomeAuto.Automations.Occupancy, zone: :basement,
+        timeout: 5,
+        topic?: &(HomeAuto.Zones.Basement.topic?(:occupancy, &1)),
+        publish_to: "homekit/house/zones/basement/occupancy"},
+
+      {HomeAuto.Automations.Motion, zone: :living_room,
+        topic?: &(HomeAuto.Zones.LivingRoom.topic?(:motion, &1)),
+        publish_to: "homekit/house/zones/living-room/motion"},
+      {HomeAuto.Automations.Occupancy, zone: :living_room,
+        timeout: 5,
+        topic?: &(HomeAuto.Zones.LivingRoom.topic?(:occupancy, &1)),
+        publish_to: "homekit/house/zones/living-room/occupancy"},
+
+      {HomeAuto.Automations.Motion, zone: :kitchen,
+        topic?: &(HomeAuto.Zones.Kitchen.topic?(:motion, &1)),
+        publish_to: "homekit/house/zones/kitchen/motion"},
+      {HomeAuto.Automations.Occupancy, zone: :kitchen,
+        timeout: 5,
+        topic?: &(HomeAuto.Zones.Kitchen.topic?(:occupancy, &1)),
+        publish_to: "homekit/house/zones/kitchen/occupancy"},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
