@@ -1,8 +1,8 @@
 import Config
 
 # Configure your database
-config :home_auto, HomeAuto.Repo,
-  database: Path.expand("../home_auto_dev.db", __DIR__),
+config :homer, Homer.Repo,
+  database: Path.expand("../homer_dev.db", __DIR__),
   pool_size: 5,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true
@@ -13,7 +13,7 @@ config :home_auto, HomeAuto.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
-config :home_auto, HomeAutoWeb.Endpoint,
+config :homer, HomerWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: String.to_integer(System.get_env("PORT") || "4000")],
@@ -22,8 +22,8 @@ config :home_auto, HomeAutoWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "iK4HaqvCDH1fvFW/sjeO80Cz0tWLGF1nFO197Kfk7KRuJB7BbzSSHoxOpTmA+MPR",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:home_auto, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:home_auto, ~w(--watch)]}
+    esbuild: {Esbuild, :install_and_run, [:homer, ~w(--sourcemap=inline --watch)]},
+    tailwind: {Tailwind, :install_and_run, [:homer, ~w(--watch)]}
   ]
 
 # ## SSL Support
@@ -50,18 +50,18 @@ config :home_auto, HomeAutoWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :home_auto, HomeAutoWeb.Endpoint,
+config :homer, HomerWeb.Endpoint,
   live_reload: [
     web_console_logger: true,
     patterns: [
       ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/home_auto_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$"
+      ~r"lib/homer_web/(?:controllers|live|components|router)/?.*\.(ex|heex)$"
     ]
   ]
 
 # Enable dev routes for dashboard and mailbox
-config :home_auto, dev_routes: true
+config :homer, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :default_formatter, format: "[$level] $message\n"
@@ -85,5 +85,5 @@ config :phoenix_live_view,
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
 
-config :home_auto, HomeAuto.Scheduler,
+config :homer, Homer.Scheduler,
   debug_logging: true

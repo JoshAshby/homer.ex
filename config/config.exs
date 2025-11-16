@@ -9,19 +9,19 @@ import Config
 
 config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
 
-config :home_auto,
-  ecto_repos: [HomeAuto.Repo],
+config :homer,
+  ecto_repos: [Homer.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint
-config :home_auto, HomeAutoWeb.Endpoint,
+config :homer, HomerWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
-    formats: [html: HomeAutoWeb.ErrorHTML, json: HomeAutoWeb.ErrorJSON],
+    formats: [html: HomerWeb.ErrorHTML, json: HomerWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: HomeAuto.PubSub,
+  pubsub_server: Homer.PubSub,
   live_view: [signing_salt: "fiPfsTXe"]
 
 # Configures the mailer
@@ -31,12 +31,12 @@ config :home_auto, HomeAutoWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :home_auto, HomeAuto.Mailer, adapter: Swoosh.Adapters.Local
+config :homer, Homer.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.25.4",
-  home_auto: [
+  homer: [
     args:
       ~w(js/app.js --bundle --target=es2022 --outdir=../priv/static/assets/js --external:/fonts/* --external:/images/* --alias:@=.),
     cd: Path.expand("../assets", __DIR__),
@@ -46,7 +46,7 @@ config :esbuild,
 # Configure tailwind (the version is required)
 config :tailwind,
   version: "4.1.7",
-  home_auto: [
+  homer: [
     args: ~w(
       --input=assets/css/app.css
       --output=priv/static/assets/css/app.css
@@ -62,16 +62,16 @@ config :logger, :default_formatter,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :home_auto, HomeAuto.Scheduler,
+config :homer, Homer.Scheduler,
   jobs: [
     # Every minute
-    {"* * * * *", {HomeAuto.Ticker, :tick, []}},
+    {"* * * * *", {Homer.Ticker, :tick, []}},
   ]
 
-config :home_auto, :emqtt,
+config :homer, :emqtt,
   host: "boulder.local",
   port: 1883,
-  clientid: "home_auto",
+  clientid: "homer",
   clean_start: false,
   name: :emqtt
 

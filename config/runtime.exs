@@ -12,12 +12,12 @@ import Config
 # If you use `mix release`, you need to explicitly enable the server
 # by passing the PHX_SERVER=true when you start it:
 #
-#     PHX_SERVER=true bin/home_auto start
+#     PHX_SERVER=true bin/homer start
 #
 # Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
 # script that automatically sets the env var above.
 if System.get_env("PHX_SERVER") do
-  config :home_auto, HomeAutoWeb.Endpoint, server: true
+  config :homer, HomerWeb.Endpoint, server: true
 end
 
 if config_env() == :prod do
@@ -25,10 +25,10 @@ if config_env() == :prod do
     System.get_env("DATABASE_PATH") ||
       raise """
       environment variable DATABASE_PATH is missing.
-      For example: /etc/home_auto/home_auto.db
+      For example: /etc/homer/homer.db
       """
 
-  config :home_auto, HomeAuto.Repo,
+  config :homer, Homer.Repo,
     database: database_path,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "5")
 
@@ -47,9 +47,9 @@ if config_env() == :prod do
   host = System.get_env("PHX_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
-  config :home_auto, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
+  config :homer, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
-  config :home_auto, HomeAutoWeb.Endpoint,
+  config :homer, HomerWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
     http: [
       # Enable IPv6 and bind on all interfaces.
@@ -66,7 +66,7 @@ if config_env() == :prod do
   # To get SSL working, you will need to add the `https` key
   # to your endpoint configuration:
   #
-  #     config :home_auto, HomeAutoWeb.Endpoint,
+  #     config :homer, HomerWeb.Endpoint,
   #       https: [
   #         ...,
   #         port: 443,
@@ -88,7 +88,7 @@ if config_env() == :prod do
   # We also recommend setting `force_ssl` in your config/prod.exs,
   # ensuring no data is ever sent via http, always redirecting to https:
   #
-  #     config :home_auto, HomeAutoWeb.Endpoint,
+  #     config :homer, HomerWeb.Endpoint,
   #       force_ssl: [hsts: true]
   #
   # Check `Plug.SSL` for all available options in `force_ssl`.
@@ -98,7 +98,7 @@ if config_env() == :prod do
   # In production you need to configure the mailer to use a different adapter.
   # Here is an example configuration for Mailgun:
   #
-  #     config :home_auto, HomeAuto.Mailer,
+  #     config :homer, Homer.Mailer,
   #       adapter: Swoosh.Adapters.Mailgun,
   #       api_key: System.get_env("MAILGUN_API_KEY"),
   #       domain: System.get_env("MAILGUN_DOMAIN")
