@@ -1,35 +1,20 @@
 defmodule HomeAuto.Ticker do
   @moduledoc false
 
+  require Logger
+
   def tick() do
-    Phoenix.PubSub.broadcast(HomeAuto.PubSub, "ticker", {:tick, %{}})
+    datetime = DateTime.now!("America/Denver")
+    datetime = %{datetime | second: 0, microsecond: {0, 0}}
+
+    Logger.debug("Ticking at #{datetime}")
+    Phoenix.PubSub.broadcast(HomeAuto.PubSub, "ticker", {:tick, datetime})
   end
 
-  #use GenServer
+  def daylight_time(datetime) do
+    time = DateTime.to_time(datetime)
+    dst_flag = if datetime.std_offset == 1, do: :dst, else: :std
 
-  #def start_link([]) do
-    #GenServer.start_link(__MODULE__, [])
-  #end
-
-  #def init([]) do
-    #state = %{
-      #interval: 1 * 60 * 1000, # Tick on ence every minute
-      #timer: nil
-    #}
-
-    #{:ok, set_timer(state)}
-  #end
-
-  #def handle_info(:tick, state) do
-    #{:noreply, set_timer(state)}
-  #end
-
-  #defp set_timer(%{ timer: timer, interval: interval } = state) do
-    #if timer do
-      #Process.cancel_timer(timer)
-    #end
-
-    #timer = Process.send_after(self(), :tick, interval)
-    #%{state | timer: timer}
-  #end
+    {dst_flag, time}
+  end
 end

@@ -7,6 +7,8 @@
 # General application configuration
 import Config
 
+config :elixir, :time_zone_database, Tzdata.TimeZoneDatabase
+
 config :home_auto,
   ecto_repos: [HomeAuto.Repo],
   generators: [timestamp_type: :utc_datetime]
@@ -63,7 +65,7 @@ config :phoenix, :json_library, Jason
 config :home_auto, HomeAuto.Scheduler,
   jobs: [
     # Every minute
-    {"* * * * *",      {Ticker, :send, []}},
+    {"* * * * *", {HomeAuto.Ticker, :tick, []}},
   ]
 
 config :home_auto, :emqtt,

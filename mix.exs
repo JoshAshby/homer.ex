@@ -80,6 +80,7 @@ defmodule HomeAuto.MixProject do
       {:emqtt, github: "emqx/emqtt", tag: "1.13.8", system_env: [{"BUILD_WITHOUT_QUIC", "1"}]},
       # Scheduling via cron
       {:quantum, "~> 3.0"},
+      {:tzdata, "~> 1.1"},
     ]
   end
 

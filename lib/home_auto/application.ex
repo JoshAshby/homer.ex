@@ -19,7 +19,12 @@ defmodule HomeAuto.Application do
       # Listeners,
       HomeAuto.MQTT,
 
+      # Schedules
       HomeAuto.Scheduler,
+      HomeAuto.Schedules.Morning,
+      HomeAuto.Schedules.Evening,
+      HomeAuto.Schedules.Nightowl,
+
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
