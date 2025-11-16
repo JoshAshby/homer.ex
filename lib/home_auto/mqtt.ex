@@ -4,14 +4,14 @@ defmodule HomeAuto.MQTT do
   use GenServer
   alias Phoenix.PubSub
 
+  require Logger
+
   def start_link([]) do
-    GenServer.start_link(__MODULE__, [])
+    GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   def init([]) do
     emqtt_opts = Application.get_env(:home_auto, :emqtt)
-
-    PubSub.subscribe(HomeAuto.PubSub, "mqtt:publish")
 
     {:ok, pid} = :emqtt.start_link(emqtt_opts)
     state = %{pid: pid}
@@ -36,17 +36,17 @@ defmodule HomeAuto.MQTT do
     {:noreply, state}
   end
 
-  def handle_info({:publish, topic, payload}, state), do: publish(state, topic, payload)
-  def handle_cast({:publish, topic, payload}, state), do: publish(state, topic, payload)
+  def handle_cast({:publish_outbound, topic, payload}, state), do: handle_publish({topic, payload}, state)
 
-  def publish(%{pid: pid} = state, topic, payload) do
-    payload = :erlang.term_to_binary(payload)
-    :emqtt.publish(pid, topic, payload)
+  def handle_publish({topic, payload}, %{pid: pid} = state) do
+    res = :emqtt.publish(pid, topic, payload)
+    Logger.info("Published to #{topic} with #{payload} - #{res}")
 
     {:noreply, state}
   end
 
-  def publish(topic, payload), do: GenServer.cast(__MODULE__, {:publish, topic, payload})
+  def publish(topic, payload), do:
+    GenServer.cast(__MODULE__, {:publish_outbound, topic, payload})
 
   alias HomeAuto.Devices
 

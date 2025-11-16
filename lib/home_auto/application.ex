@@ -27,28 +27,28 @@ defmodule HomeAuto.Application do
 
       # Automations
       {HomeAuto.Automations.Motion, zone: :basement,
-        topic?: &(HomeAuto.Zones.Basement.topic?(:motion, &1)),
-        publish_to: "homekit/house/zones/basement/motion"},
+        consumes: HomeAuto.Zones.Basement.topics(:motion),
+        produces: "homekit/house/zones/basement/motion"},
       {HomeAuto.Automations.Occupancy, zone: :basement,
         timeout: 5,
-        topic?: &(HomeAuto.Zones.Basement.topic?(:occupancy, &1)),
-        publish_to: "homekit/house/zones/basement/occupancy"},
+        consumes: HomeAuto.Zones.Basement.topics(:occupancy),
+        produces: "homekit/house/zones/basement/occupancy"},
 
       {HomeAuto.Automations.Motion, zone: :living_room,
-        topic?: &(HomeAuto.Zones.LivingRoom.topic?(:motion, &1)),
-        publish_to: "homekit/house/zones/living-room/motion"},
+        consumes: HomeAuto.Zones.LivingRoom.topics(:motion),
+        produces: "homekit/house/zones/living-room/motion"},
       {HomeAuto.Automations.Occupancy, zone: :living_room,
         timeout: 5,
-        topic?: &(HomeAuto.Zones.LivingRoom.topic?(:occupancy, &1)),
-        publish_to: "homekit/house/zones/living-room/occupancy"},
+        consumes: HomeAuto.Zones.LivingRoom.topics(:occupancy),
+        produces: "homekit/house/zones/living-room/occupancy"},
 
       {HomeAuto.Automations.Motion, zone: :kitchen,
-        topic?: &(HomeAuto.Zones.Kitchen.topic?(:motion, &1)),
-        publish_to: "homekit/house/zones/kitchen/motion"},
+        consumes: HomeAuto.Zones.Kitchen.topics(:motion),
+        produces: "homekit/house/zones/kitchen/motion"},
       {HomeAuto.Automations.Occupancy, zone: :kitchen,
         timeout: 5,
-        topic?: &(HomeAuto.Zones.Kitchen.topic?(:occupancy, &1)),
-        publish_to: "homekit/house/zones/kitchen/occupancy"},
+        consumes: HomeAuto.Zones.Kitchen.topics(:occupancy),
+        produces: "homekit/house/zones/kitchen/occupancy"},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

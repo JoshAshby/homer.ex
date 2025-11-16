@@ -3,6 +3,8 @@ defmodule HomeAuto.Automations.Motion do
 
   use GenServer
   alias Phoenix.PubSub
+
+  alias HomeAuto.MQTT
   alias HomeAuto.Devices.Motion
 
   require Logger
@@ -34,19 +36,19 @@ defmodule HomeAuto.Automations.Motion do
 
   @impl true
   def handle_info({:mqtt, topic, %Motion{} = payload}, state) do
-    state = if Kernel.apply(state.topic?, [topic]) do
-      motion_changed(state, topic, payload)
-    else
-      state
-    end
+    case Enum.any?(state.consumes, &(MQTT.Topic.matches(topic, &1))) do
+      true ->
+        new_state = handle_event({topic, payload}, state)
+        {:noreply, new_state}
 
-    {:noreply, state}
+      false -> {:noreply, state}
+    end
   end
 
   @impl true
   def handle_info({:mqtt, _, _}, state), do: {:noreply, state}
 
-  def motion_changed(state, topic, %Motion{} = payload) do
+  def handle_event({topic, %Motion{} = payload}, state) do
     recently = DateTime.shift(DateTime.utc_now(), day: -1)
 
     motion_states = Map.put(state.states, topic, payload)
@@ -57,8 +59,9 @@ defmodule HomeAuto.Automations.Motion do
 
     if state.detected != detected do
       Logger.info("Zone:#{state.zone} Motion Detected? #{detected}")
-      # Publish to MQTT under state.publish_to
-       #MQTT.publish(state.publish_to, if detected, do: "true", else: "false")
+
+      mqtt_value = if detected, do: "true", else: "false"
+      MQTT.publish(state.produces, mqtt_value)
     end
 
     %{state | detected: detected, states: motion_states}

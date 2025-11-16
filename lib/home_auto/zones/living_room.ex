@@ -1,10 +1,12 @@
 defmodule HomeAuto.Zones.LivingRoom do
   @moduledoc false
 
-  def topic?(:motion, "zigbee/living-room/motion/" <> _), do: true
-  def topic?(:motion, "zigbee/dining-room/motion/" <> _), do: true
+  def topics(:motion), do: [
+    "zigbee/living-room/motion/#",
+    "zigbee/dining-room/motion/#",
+  ]
 
-  def topic?(:occupancy, "homekit/house/zones/livinig-room/motion"), do: true
-
-  def topic?(_, _), do: false
+  def topics(:occupancy), do: [
+    "homekit/house/zones/livinig-room/motion",
+  ]
 end

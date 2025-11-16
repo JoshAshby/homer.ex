@@ -1,11 +1,13 @@
 defmodule HomeAuto.Zones.Basement do
   @moduledoc false
 
-  def topic?(:motion, "zigbee/basement/motion/" <> _), do: true
-  def topic?(:motion, "zigbee/basement/presence/" <> _), do: true
-  def topic?(:motion, "homekit/house/basement/aqara-fp2-1/set/state"), do: true
+  def topics(:motion), do: [
+    "zigbee/basement/motion/#",
+    "zigbee/basement/presence/#",
+    "homekit/house/basement/aqara-fp2-1/set/state",
+  ]
 
-  def topic?(:occupancy, "homekit/house/zones/basement/motion"), do: true
-
-  def topic?(_, _), do: false
+  def topics(:occupancy), do: [
+    "homekit/house/zones/basement/motion",
+  ]
 end

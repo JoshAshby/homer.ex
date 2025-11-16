@@ -3,6 +3,8 @@ defmodule HomeAuto.Automations.Occupancy do
 
   use GenServer
   alias Phoenix.PubSub
+
+  alias HomeAuto.MQTT
   alias HomeAuto.Devices.Motion
 
   require Logger
@@ -35,21 +37,27 @@ defmodule HomeAuto.Automations.Occupancy do
 
   @impl true
   def handle_info({:mqtt, topic, %Motion{} = payload}, state) do
-    state = if Kernel.apply(state.topic?, [topic]) do
-      motion_changed(state, topic, payload)
-    else
-      state
-    end
+    case Enum.any?(state.consumes, &(MQTT.Topic.matches(topic, &1))) do
+      true ->
+        new_state = handle_event({topic, payload}, state)
+        {:noreply, new_state}
 
-    {:noreply, state}
+      false -> {:noreply, state}
+    end
   end
 
   @impl true
   def handle_info({:mqtt, _, _}, state), do: {:noreply, state}
 
-  def handle_info(:clear, state), do: {:noreply, %{state | detected: false}}
+  @impl true
+  def handle_info(:clear, state) do
+    Logger.info("Zone:#{state.zone} Occupancy Detected? false")
+    MQTT.publish(state.produces, "false")
 
-  def motion_changed(state, topic, %Motion{} = payload) do
+    {:noreply, %{state | detected: false}}
+  end
+
+  def handle_event({topic, %Motion{} = payload}, state) do
     recently = DateTime.shift(DateTime.utc_now(), day: -1)
 
     motion_states = Map.put(state.states, topic, payload)
@@ -58,14 +66,15 @@ defmodule HomeAuto.Automations.Occupancy do
       |> Enum.filter(&(DateTime.after?(&1.last_seen, recently)))
       |> Enum.any?(&(&1.detected))
 
-    Logger.info("Zone:#{state.zone} Occupancy Detected? #{detected}")
-
-    if state.detected do
+    if detected do
       if state.timer do
         Process.cancel_timer(state.timer)
       end
 
       timer = nil
+
+      Logger.info("Zone:#{state.zone} Occupancy Detected? true")
+      MQTT.publish(state.produces, "true")
     else
       timer = Process.send_after(self(), :clear, state.timeout * 60 * 1000)
     end
