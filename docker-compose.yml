@@ -1,0 +1,15 @@
+version: "3.7"
+
+services:
+  homer:
+    image: ghcr.io/joshashby/homer.ex:main
+    restart: always
+    volumes:
+      - /volume1/docker/homer/:/app/data/
+    ports:
+      - 4000:4000
+    env_file: stack.env
+    environment:
+      - TZ=America/Denver
+      - PHX_HOST=0.0.0.0
+      - PORT=4000

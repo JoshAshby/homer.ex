@@ -1,0 +1,25 @@
+[tools]
+elixir = "latest"
+erlang = "latest"
+rebar = "latest"
+
+[env]
+NODE_NAME = "home_auto@127.0.0.1"
+NODE_COOKIE = "mycookie"
+
+LIVEBOOK_APPS_PATH = "{{config_root}}/notebook/"
+LIVEBOOK_DEFAULT_RUNTIME = "attached:{{env.NODE_NAME}}:{{env.NODE_COOKIE}}"
+LIVEBOOK_TOKEN_ENABLED = false
+
+[tasks.livebook]
+dir = "{{cwd}}"
+run = "~/.mix/escripts/livebook server --port 4001"
+
+[tasks.serve]
+dir = "{{cwd}}"
+run = "iex --name {{env.NODE_NAME}} --cookie {{env.NODE_COOKIE}} -S mix phx.server"
+
+
+[tasks.build]
+dir = "{{cwd}}"
+run = "docker build ."
