@@ -66,19 +66,19 @@ defmodule Homer.Automations.Occupancy do
       |> Enum.filter(&(DateTime.after?(&1.last_seen, recently)))
       |> Enum.any?(&(&1.detected))
 
-    if detected do
+    timer = if detected do
       if state.timer do
         Process.cancel_timer(state.timer)
       end
 
-      timer = nil
-
       Logger.info("Zone:#{state.zone} Occupancy Detected? true")
       MQTT.publish(state.produces, "true")
+
+      nil
     else
-      timer = Process.send_after(self(), :clear, state.timeout * 60 * 1000)
+      Process.send_after(self(), :clear, state.timeout * 60 * 1000)
     end
 
-    %{state | detected: detected, states: motion_states}
+    %{state | detected: detected, states: motion_states, timer: timer}
   end
 end
