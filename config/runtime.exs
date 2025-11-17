@@ -111,3 +111,13 @@ if config_env() == :prod do
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 end
+
+mqtt_host =
+  System.get_env("MQTT_HOST") || "boulder.local"
+
+config :homer, :emqtt,
+  host: mqtt_host,
+  port: 1883,
+  clientid: "homer",
+  clean_start: false,
+  name: :emqtt

@@ -68,13 +68,6 @@ config :homer, Homer.Scheduler,
     {"* * * * *", {Homer.Ticker, :tick, []}},
   ]
 
-config :homer, :emqtt,
-  host: "boulder.local",
-  port: 1883,
-  clientid: "homer",
-  clean_start: false,
-  name: :emqtt
-
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
