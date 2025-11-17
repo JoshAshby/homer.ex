@@ -39,7 +39,7 @@ defmodule Homer.MQTT do
   def handle_cast({:publish_outbound, topic, payload}, state), do: handle_publish({topic, payload}, state)
 
   def handle_publish({topic, payload}, %{pid: pid} = state) do
-    res = :emqtt.publish(pid, topic, payload)
+    res = :emqtt.publish(pid, topic, payload, retain: true)
     Logger.info("Published to #{topic} with #{payload} - #{res}")
 
     {:noreply, state}
