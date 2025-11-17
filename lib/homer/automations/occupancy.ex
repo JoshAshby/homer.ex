@@ -13,12 +13,12 @@ defmodule Homer.Automations.Occupancy do
     GenServer.start_link(__MODULE__, params)
   end
 
-  def child_spec(params) do
-    %{
-      id: "occupancy:" <> Atom.to_string(Keyword.get(params, :zone)),
-      start: {__MODULE__, :start_link, [params]}
-    }
-  end
+  #def child_spec(params) do
+    #%{
+      #id: "occupancy:" <> Atom.to_string(Keyword.get(params, :zone)),
+      #start: {__MODULE__, :start_link, [params]}
+    #}
+  #end
 
   @impl true
   def init(params) do
@@ -51,7 +51,7 @@ defmodule Homer.Automations.Occupancy do
 
   @impl true
   def handle_info(:clear, state) do
-    Logger.info("Zone:#{state.zone} Occupancy Detected? false")
+    Logger.info("Zone:#{state.produces} Occupancy Detected? false")
     MQTT.publish(state.produces, "false")
 
     {:noreply, %{state | detected: false}}
@@ -71,7 +71,7 @@ defmodule Homer.Automations.Occupancy do
         Process.cancel_timer(state.timer)
       end
 
-      Logger.info("Zone:#{state.zone} Occupancy Detected? true")
+      Logger.info("Zone:#{state.produces} Occupancy Detected? true")
       MQTT.publish(state.produces, "true")
 
       nil

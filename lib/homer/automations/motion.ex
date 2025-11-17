@@ -9,16 +9,18 @@ defmodule Homer.Automations.Motion do
 
   require Logger
 
+  @impl true
   def start_link(params) do
     GenServer.start_link(__MODULE__, params)
   end
 
-  def child_spec(params) do
-    %{
-      id: "motion:" <> Atom.to_string(Keyword.get(params, :zone)),
-      start: {__MODULE__, :start_link, [params]}
-    }
-  end
+  #@impl true
+  #def child_spec(params) do
+    #%{
+      #id: "motion:" <> Atom.to_string(Keyword.get(params, :zone)),
+      #start: {__MODULE__, :start_link, [params]}
+    #}
+  #end
 
   @impl true
   def init(params) do
@@ -58,7 +60,7 @@ defmodule Homer.Automations.Motion do
       |> Enum.any?(&(&1.detected))
 
     if state.detected != detected do
-      Logger.info("Zone:#{state.zone} Motion Detected? #{detected}")
+      Logger.info("Zone:#{state.produces} Motion Detected? #{detected}")
 
       mqtt_value = if detected, do: "true", else: "false"
       MQTT.publish(state.produces, mqtt_value)

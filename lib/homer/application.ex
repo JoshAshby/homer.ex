@@ -16,6 +16,7 @@ defmodule Homer.Application do
       # {Homer.Worker, arg},
       # Start to serve requests, typically the last entry
       HomerWeb.Endpoint,
+
       # Listeners,
       Homer.MQTT,
 
@@ -25,30 +26,12 @@ defmodule Homer.Application do
       Homer.Schedules.Evening,
       Homer.Schedules.Nightowl,
 
-      # Automations
-      {Homer.Automations.Motion, zone: :basement,
-        consumes: Homer.Zones.Basement.topics(:motion),
-        produces: "homekit/house/zones/basement/motion"},
-      {Homer.Automations.Occupancy, zone: :basement,
-        timeout: 5,
-        consumes: Homer.Zones.Basement.topics(:occupancy),
-        produces: "homekit/house/zones/basement/occupancy"},
-
-      {Homer.Automations.Motion, zone: :living_room,
-        consumes: Homer.Zones.LivingRoom.topics(:motion),
-        produces: "homekit/house/zones/living-room/motion"},
-      {Homer.Automations.Occupancy, zone: :living_room,
-        timeout: 5,
-        consumes: Homer.Zones.LivingRoom.topics(:occupancy),
-        produces: "homekit/house/zones/living-room/occupancy"},
-
-      {Homer.Automations.Motion, zone: :kitchen,
-        consumes: Homer.Zones.Kitchen.topics(:motion),
-        produces: "homekit/house/zones/kitchen/motion"},
-      {Homer.Automations.Occupancy, zone: :kitchen,
-        timeout: 5,
-        consumes: Homer.Zones.Kitchen.topics(:occupancy),
-        produces: "homekit/house/zones/kitchen/occupancy"},
+      # Zones
+      Homer.Zones.Basement,
+      Homer.Zones.Kitchen,
+      Homer.Zones.LivingRoom,
+      #Homer.Zones.Bedroom,
+      #Homer.Zones.Office,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
