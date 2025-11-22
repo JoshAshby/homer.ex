@@ -14,14 +14,6 @@ defmodule Homer.Automations.Motion do
     GenServer.start_link(__MODULE__, params)
   end
 
-  #@impl true
-  #def child_spec(params) do
-    #%{
-      #id: "motion:" <> Atom.to_string(Keyword.get(params, :zone)),
-      #start: {__MODULE__, :start_link, [params]}
-    #}
-  #end
-
   @impl true
   def init(params) do
     PubSub.subscribe(Homer.PubSub, "mqtt:all")

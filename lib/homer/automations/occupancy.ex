@@ -13,13 +13,6 @@ defmodule Homer.Automations.Occupancy do
     GenServer.start_link(__MODULE__, params)
   end
 
-  #def child_spec(params) do
-    #%{
-      #id: "occupancy:" <> Atom.to_string(Keyword.get(params, :zone)),
-      #start: {__MODULE__, :start_link, [params]}
-    #}
-  #end
-
   @impl true
   def init(params) do
     PubSub.subscribe(Homer.PubSub, "mqtt:all")
