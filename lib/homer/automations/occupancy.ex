@@ -59,7 +59,7 @@ defmodule Homer.Automations.Occupancy do
       |> Enum.filter(&(DateTime.after?(&1.last_seen, recently)))
       |> Enum.any?(&(&1.detected))
 
-    timer = if detected do
+    if detected do
       if state.timer do
         Process.cancel_timer(state.timer)
       end
@@ -69,11 +69,11 @@ defmodule Homer.Automations.Occupancy do
         MQTT.publish(state.produces, "true")
       end
 
-      nil
-    else
-      Process.send_after(self(), :clear, state.timeout * 60 * 1000)
-    end
+      %{state | detected: true, states: motion_states, timer: nil}
 
-    %{state | detected: detected, states: motion_states, timer: timer}
+    else
+      timer = Process.send_after(self(), :clear, state.timeout * 60 * 1000)
+      %{state | states: motion_states, timer: timer}
+    end
   end
 end
