@@ -64,8 +64,10 @@ defmodule Homer.Automations.Occupancy do
         Process.cancel_timer(state.timer)
       end
 
-      Logger.info("Zone:#{state.produces} Occupancy Detected? true")
-      MQTT.publish(state.produces, "true")
+      unless state.detected do
+        Logger.info("Zone:#{state.produces} Occupancy Detected? true")
+        MQTT.publish(state.produces, "true")
+      end
 
       nil
     else
